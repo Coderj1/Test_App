@@ -3,7 +3,7 @@ import prisma from "../configs/prisma.js";
 import sendEmail from "../configs/nodemailer.js";
 
 // Create a client to send and receive events
-export const inngest = new Inngest({ id: "profile-marketplace", isDev: true }); // for local dev only
+export const inngest = new Inngest({ id: "test_app" }); // for local dev only
 
 // Inngest Function to save user data to a database
 const syncUserCreation = inngest.createFunction(
