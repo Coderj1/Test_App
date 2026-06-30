@@ -144,7 +144,7 @@ const MyListings = () => {
                         </div>
                         <span className='text-xl font-medium text-gray-700'>
                             {currency}
-                            {item.value.toFixed(2)}
+                            {item.value}
                         </span>
                     </div>
                 ))}
