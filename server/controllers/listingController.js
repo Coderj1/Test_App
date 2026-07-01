@@ -91,14 +91,14 @@ export const getAllUserListing = async (req, res) => {
             orderBy: { createdAt: "desc" },
         });
 
-        const user = await prisma.user.findUnique({
+        const userinfo = await prisma.user.findUnique({
             where: { id: userId },
         });
 
         const balance = {
-            earned: user.earned,
-            withdrawn: user.withdrawn,
-            available: user.earned - user.withdrawn,
+            earned: userinfo.earned,
+            withdrawn: userinfo.withdrawn,
+            available: userinfo.earned - userinfo.withdrawn,
         };
 
         if (!listings || listings.length === 0) {
