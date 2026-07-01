@@ -3,13 +3,14 @@ import prisma from "../configs/prisma.js";
 import sendEmail from "../configs/nodemailer.js";
 
 // Create a client to send and receive events
-export const inngest = new Inngest({ id: "profile-marketplace" });
+export const inngest = new Inngest({ id: "profile-marketplace", isDev: true }); // for local dev only
 
 // Inngest Function to save user data to a database
 const syncUserCreation = inngest.createFunction(
-    { id: 'sync-user-from-clerk' },
-    { event: 'clerk/user.created' },
+    { id: 'sync-user-from-clerk', triggers: { event: 'clerk/user.created' } },
     async ({ event }) => {
+      console.log("🔥 clerk/user.created received");
+      console.log(event.data);
         const { data } = event
 
         // Check if user already exists in the database
@@ -44,8 +45,7 @@ const syncUserCreation = inngest.createFunction(
 
 // Inngest Function to delete user from database
 const syncUserDeletion = inngest.createFunction(
-    { id: 'delete-user-with-clerk' },
-    { event: 'clerk/user.deleted' },
+    { id: 'delete-user-with-clerk', triggers: { event: 'clerk/user.deleted' } },
     async ({ event }) => {
 
         const { data } = event;
@@ -75,8 +75,7 @@ const syncUserDeletion = inngest.createFunction(
 
 // Inngest Function to update user data in database 
 const syncUserUpdation = inngest.createFunction(
-    { id: 'update-user-from-clerk' },
-    { event: 'clerk/user.updated' },
+    { id: 'update-user-from-clerk', triggers: { event: 'clerk/user.updated' } },
     async ({ event }) => {
         const { data } = event;
         await prisma.user.update({
@@ -94,8 +93,7 @@ const syncUserUpdation = inngest.createFunction(
 
 // Inngest Function to send purchase email to the customer
 const sendPurchaseEmail = inngest.createFunction(
-    { id: 'send-purchase-email' },
-    { event: "app/purchase" },
+    { id: 'send-purchase-email', triggers: { event: "app/purchase" } },
     async ({ event }) => {
 
         const { transaction } = event.data;
@@ -133,8 +131,7 @@ const sendPurchaseEmail = inngest.createFunction(
 
 // Inngest Function to send new credentials for deleted listings
 const sendNewCredentials = inngest.createFunction(
-    { id: 'send-new-credentials' },
-    { event: "app/listing-deleted" },
+    { id: 'send-new-credentials', triggers: { event: "app/listing-deleted" } },
     async ({ event }) => {
         const { listing, listingId } = event.data;
 
